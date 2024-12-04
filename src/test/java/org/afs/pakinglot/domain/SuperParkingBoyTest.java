@@ -3,6 +3,10 @@ package org.afs.pakinglot.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+
+import org.afs.pakinglot.domain.entity.Car;
+import org.afs.pakinglot.domain.entity.ParkingLot;
+import org.afs.pakinglot.domain.entity.Ticket;
 import org.afs.pakinglot.domain.strategies.AvailableRateStrategy;
 import org.junit.jupiter.api.Test;
 

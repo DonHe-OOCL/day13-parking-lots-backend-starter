@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+
+import org.afs.pakinglot.domain.entity.Car;
+import org.afs.pakinglot.domain.entity.ParkingLot;
+import org.afs.pakinglot.domain.entity.Ticket;
 import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
 import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
 import org.junit.jupiter.api.Test;
@@ -57,7 +61,7 @@ class StandardParkingBoyTest {
         // Given
         ParkingLot parkingLot = new ParkingLot();
         ParkingBoy parkingBoy = new ParkingBoy(parkingLot);
-        Ticket wrongTicket = new Ticket(CarPlateGenerator.generatePlate(), 1, 1);
+        Ticket wrongTicket = new Ticket(CarPlateGenerator.generatePlate(), 1, parkingLot);
         // When
         // Then
         UnrecognizedTicketException exception =

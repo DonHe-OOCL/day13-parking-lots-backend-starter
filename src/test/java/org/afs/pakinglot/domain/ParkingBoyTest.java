@@ -1,5 +1,8 @@
 package org.afs.pakinglot.domain;
 
+import org.afs.pakinglot.domain.entity.Car;
+import org.afs.pakinglot.domain.entity.ParkingLot;
+import org.afs.pakinglot.domain.entity.Ticket;
 import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
 import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
 import org.junit.jupiter.api.Test;
@@ -53,7 +56,7 @@ class ParkingBoyTest {
         ParkingLot parkingLot2 = new ParkingLot();
         parkingLot1.park(new Car(CarPlateGenerator.generatePlate()));
         parkingLot2.park(new Car(CarPlateGenerator.generatePlate()));
-        Ticket wrongTicket = new Ticket(CarPlateGenerator.generatePlate(), 1, 1 );
+        Ticket wrongTicket = new Ticket(CarPlateGenerator.generatePlate(), 1, parkingLot1 );
         ParkingBoy parkingBoy = new ParkingBoy(List.of(parkingLot1, parkingLot2));
         // When
         // Then

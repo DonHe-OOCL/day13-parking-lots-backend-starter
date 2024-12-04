@@ -1,15 +1,22 @@
-package org.afs.pakinglot.domain;
+package org.afs.pakinglot.domain.entity;
 
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
 import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
 
+@Entity
 public class ParkingLot {
-    private int id;
+    @Id
+    private Integer id;
     private String name;
+    @Transient
     private final Map<Ticket, Car> tickets = new HashMap<>();
 
     private static final int DEFAULT_CAPACITY = 10;
@@ -42,7 +49,7 @@ public class ParkingLot {
             throw new NoAvailablePositionException();
         }
 
-        Ticket ticket = new Ticket(car.plateNumber(), tickets.size() + 1, this.id);
+        Ticket ticket = new Ticket(car.getPlateNumber(), tickets.size() + 1, this);
         tickets.put(ticket, car);
         return ticket;
     }
