@@ -26,5 +26,7 @@ public class ParkingService {
         return strategyMap.keySet().stream().toList();
     }
 
-
+    public List<ParkingLot> getParkingLots() {
+        return parkingBoy.getParkingLots();
+    }
 }

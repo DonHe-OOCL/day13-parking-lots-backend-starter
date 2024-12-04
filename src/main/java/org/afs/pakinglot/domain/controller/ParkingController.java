@@ -23,5 +23,10 @@ public class ParkingController {
         return parkingService.getParkingStrategy();
     }
 
+    @GetMapping
+    public List<ParkingLot> getParkingLots() {
+        return parkingService.getParkingLots();
+    }
+
 
 }
