@@ -37,4 +37,9 @@ public class ParkingController {
     public Car fetch(@RequestBody Ticket ticket) {
         return parkingService.fetch(ticket);
     }
+
+    @PostMapping("/parkingLot")
+    public void addParkingLot(@RequestBody ParkingLot parkingLot) {
+        parkingService.addParkingLot(parkingLot);
+    }
 }
