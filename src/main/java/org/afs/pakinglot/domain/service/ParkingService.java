@@ -26,6 +26,12 @@ public class ParkingService {
         return strategyMap.keySet().stream().toList();
     }
 
+    public Ticket park(Car car, String strategy) {
+        ParkingStrategy parkingStrategy = strategyMap.putIfAbsent(strategy, strategyMap.get("Sequentially"));
+        parkingBoy.setParkingStrategy(parkingStrategy);
+        return parkingBoy.park(car);
+    }
+
     public List<ParkingLot> getParkingLots() {
         return parkingBoy.getParkingLots();
     }
