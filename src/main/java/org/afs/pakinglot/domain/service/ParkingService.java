@@ -32,6 +32,10 @@ public class ParkingService {
         return parkingBoy.park(car);
     }
 
+    public Car fetch(Ticket ticket) {
+        return parkingBoy.fetch(ticket);
+    }
+
     public List<ParkingLot> getParkingLots() {
         return parkingBoy.getParkingLots();
     }

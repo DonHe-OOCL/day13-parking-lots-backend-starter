@@ -32,4 +32,9 @@ public class ParkingController {
     public Ticket park(@RequestBody Car car, @PathVariable String strategy) {
         return parkingService.park(car, strategy);
     }
+
+    @PostMapping("/fetch")
+    public Car fetch(@RequestBody Ticket ticket) {
+        return parkingService.fetch(ticket);
+    }
 }
