@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 public class Ticket {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String plateNumber;

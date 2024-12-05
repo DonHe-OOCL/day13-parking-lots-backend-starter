@@ -33,23 +33,16 @@ public class ParkingBoy {
         this.parkingStrategy = parkingStrategy;
     }
 
-    public Ticket park(Car car) {
-        return parkingStrategy.findParkingLot(parkingLots).park(car);
-    }
+//    public Ticket park(Car car) {
+//        return parkingStrategy.findParkingLot(parkingLots).park(car);
+//    }
+//
+//    public Car fetch(Ticket ticket) {
+//        ParkingLot parkingLotOfTheTicket = parkingLots.stream()
+//            .filter(parkingLot -> parkingLot.contains(ticket))
+//            .findFirst()
+//            .orElseThrow(UnrecognizedTicketException::new);
+//        return parkingLotOfTheTicket.fetch(ticket);
+//    }
 
-    public Car fetch(Ticket ticket) {
-        ParkingLot parkingLotOfTheTicket = parkingLots.stream()
-            .filter(parkingLot -> parkingLot.contains(ticket))
-            .findFirst()
-            .orElseThrow(UnrecognizedTicketException::new);
-        return parkingLotOfTheTicket.fetch(ticket);
-    }
-
-    public List<ParkingLot> getParkingLots() {
-        return parkingLots;
-    }
-
-    public void setParkingStrategy(ParkingStrategy parkingStrategy) {
-        this.parkingStrategy = parkingStrategy;
-    }
 }

@@ -11,7 +11,7 @@ public class SequentiallyStrategy implements ParkingStrategy {
     @Override
     public ParkingLot findParkingLot(List<ParkingLot> parkingLots) {
         return  parkingLots.stream()
-                .filter(parkingLot -> !parkingLot.isFull())
+                .filter(parkingLot -> !parkingLot.checkFull())
                 .findFirst()
                 .orElseThrow(NoAvailablePositionException::new);
     }

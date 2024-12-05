@@ -11,7 +11,7 @@ public class AvailableRateStrategy implements ParkingStrategy{
     @Override
     public ParkingLot findParkingLot(List<ParkingLot> parkingLots) {
         return parkingLots.stream()
-                .max(Comparator.comparingDouble(ParkingLot::getAvailablePositionRate))
+                .max(Comparator.comparingDouble(ParkingLot::calculateAvailablePositionRate))
                 .orElseThrow(NoAvailablePositionException::new);
     }
 }

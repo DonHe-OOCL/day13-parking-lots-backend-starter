@@ -1,29 +1,21 @@
 package org.afs.pakinglot.domain.entity;
 
+import java.util.Set;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
-import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
-import org.afs.pakinglot.domain.exception.UnrecognizedTicketException;
+import jakarta.persistence.*;
 
 @Entity
 public class ParkingLot {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @Transient
-    private final Map<Ticket, Car> tickets = new HashMap<>();
+    private int capacity;
 
-    private static final int DEFAULT_CAPACITY = 10;
-    private final int capacity;
+    @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Ticket> tickets;
 
     public ParkingLot() {
-        this(DEFAULT_CAPACITY);
     }
 
     public ParkingLot(int capacity) {
@@ -40,38 +32,38 @@ public class ParkingLot {
         return capacity;
     }
 
-    public int getAvailableCapacity() {
+    public int calculateAvailableCapacity() {
         return capacity - tickets.size();
     }
 
-    public Ticket park(Car car) {
-        if (isFull()) {
-            throw new NoAvailablePositionException();
-        }
+//    public Ticket park(Car car) {
+//        if (isFull()) {
+//            throw new NoAvailablePositionException();
+//        }
+//
+//        Ticket ticket = new Ticket(car.getPlateNumber(), tickets.size() + 1, this);
+//        tickets.put(ticket, car);
+//        return ticket;
+//    }
 
-        Ticket ticket = new Ticket(car.getPlateNumber(), tickets.size() + 1, this);
-        tickets.put(ticket, car);
-        return ticket;
-    }
-
-    public boolean isFull() {
+    public boolean checkFull() {
         return capacity == tickets.size();
     }
 
-    public Car fetch(Ticket ticket) {
-        if (!tickets.containsKey(ticket)) {
-            throw new UnrecognizedTicketException();
-        }
+//    public Car fetch(Ticket ticket) {
+//        if (!tickets.containsKey(ticket)) {
+//            throw new UnrecognizedTicketException();
+//        }
+//
+//        return tickets.remove(ticket);
+//    }
 
-        return tickets.remove(ticket);
+    public boolean containsTicket(Ticket ticket) {
+        return tickets.contains(ticket);
     }
 
-    public boolean contains(Ticket ticket) {
-        return tickets.containsKey(ticket);
-    }
-
-    public double getAvailablePositionRate() {
-        return getAvailableCapacity() / (double) capacity;
+    public double calculateAvailablePositionRate() {
+        return calculateAvailableCapacity() / (double) capacity;
     }
 
     public String getName() {
@@ -82,8 +74,23 @@ public class ParkingLot {
         return id;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets.keySet().stream().toList();
+    public void setId(Integer id) {
+        this.id = id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(Set<Ticket> tickets) {
+        this.tickets = tickets;
+    }
 }
