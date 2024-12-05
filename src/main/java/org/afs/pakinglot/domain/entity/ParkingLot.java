@@ -27,26 +27,6 @@ public class ParkingLot {
         return capacity;
     }
 
-
-//    public Ticket park(Car car) {
-//        if (isFull()) {
-//            throw new NoAvailablePositionException();
-//        }
-//
-//        Ticket ticket = new Ticket(car.getPlateNumber(), tickets.size() + 1, this);
-//        tickets.put(ticket, car);
-//        return ticket;
-//    }
-
-
-//    public Car fetch(Ticket ticket) {
-//        if (!tickets.containsKey(ticket)) {
-//            throw new UnrecognizedTicketException();
-//        }
-//
-//        return tickets.remove(ticket);
-//    }
-
     public String getName() {
         return name;
     }

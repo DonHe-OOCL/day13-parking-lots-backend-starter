@@ -1,14 +1,7 @@
-package org.afs.pakinglot.domain.entity;
+package org.afs.pakinglot.domain.entity.dto;
 
-public class Car {
+public class TicketDto {
     private String plateNumber;
-
-    public Car() {
-    }
-
-    public Car(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
 
     public String getPlateNumber() {
         return plateNumber;

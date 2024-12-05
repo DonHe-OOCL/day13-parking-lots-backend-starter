@@ -13,7 +13,7 @@ public class Ticket {
 
     private Integer position;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "parkingLot_id")
     private ParkingLot parkingLot;
 

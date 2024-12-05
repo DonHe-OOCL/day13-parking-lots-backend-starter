@@ -2,7 +2,9 @@ package org.afs.pakinglot.domain.controller;
 
 import org.afs.pakinglot.domain.entity.Car;
 import org.afs.pakinglot.domain.entity.ParkingLot;
-import org.afs.pakinglot.domain.entity.Ticket;
+import org.afs.pakinglot.domain.entity.dto.TicketDto;
+import org.afs.pakinglot.domain.entity.vo.ParkingLotVo;
+import org.afs.pakinglot.domain.entity.vo.TicketVo;
 import org.afs.pakinglot.domain.service.ParkingService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,19 +26,19 @@ public class ParkingController {
     }
 
     @GetMapping
-    public List<ParkingLot> getParkingLots() {
+    public List<ParkingLotVo> getParkingLots() {
         return parkingService.getParkingLots();
     }
 
     @PostMapping("/park/{strategy}")
-    public Ticket park(@RequestBody Car car, @PathVariable String strategy) {
+    public TicketVo park(@RequestBody Car car, @PathVariable String strategy) {
         return parkingService.park(car, strategy);
     }
-//
-//    @PostMapping("/fetch")
-//    public Car fetch(@RequestBody Ticket ticket) {
-//        return parkingService.fetch(ticket);
-//    }
+
+    @PostMapping("/fetch")
+    public TicketVo fetch(@RequestBody TicketDto ticket) {
+        return parkingService.fetch(ticket);
+    }
 
     @PostMapping
     public ParkingLot addParkingLot(@RequestBody ParkingLot parkingLot) {

@@ -2,10 +2,7 @@ package org.afs.pakinglot.domain.strategies;
 
 import org.afs.pakinglot.domain.entity.ParkingLot;
 import org.afs.pakinglot.domain.exception.NoAvailablePositionException;
-import org.afs.pakinglot.domain.repository.ParkingLotRepository;
 import org.afs.pakinglot.domain.repository.TicketRepository;
-import org.afs.pakinglot.domain.service.ParkingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
