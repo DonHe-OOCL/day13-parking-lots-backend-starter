@@ -1,7 +1,5 @@
 package org.afs.pakinglot.domain.entity;
 
-import java.util.Set;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -11,9 +9,6 @@ public class ParkingLot {
     private Integer id;
     private String name;
     private int capacity;
-
-    @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Ticket> tickets;
 
     public ParkingLot() {
     }
@@ -32,9 +27,6 @@ public class ParkingLot {
         return capacity;
     }
 
-    public int calculateAvailableCapacity() {
-        return capacity - tickets.size();
-    }
 
 //    public Ticket park(Car car) {
 //        if (isFull()) {
@@ -46,9 +38,6 @@ public class ParkingLot {
 //        return ticket;
 //    }
 
-    public boolean checkFull() {
-        return capacity == tickets.size();
-    }
 
 //    public Car fetch(Ticket ticket) {
 //        if (!tickets.containsKey(ticket)) {
@@ -57,14 +46,6 @@ public class ParkingLot {
 //
 //        return tickets.remove(ticket);
 //    }
-
-    public boolean containsTicket(Ticket ticket) {
-        return tickets.contains(ticket);
-    }
-
-    public double calculateAvailablePositionRate() {
-        return calculateAvailableCapacity() / (double) capacity;
-    }
 
     public String getName() {
         return name;
@@ -86,11 +67,4 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 }

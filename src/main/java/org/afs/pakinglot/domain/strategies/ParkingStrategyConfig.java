@@ -11,11 +11,13 @@ import java.util.Map;
 public class ParkingStrategyConfig {
 
     @Bean
-    public Map<String, ParkingStrategy> strategyMap() {
+    public Map<String, ParkingStrategy> strategyMap(SequentiallyStrategy sequentiallyStrategy,
+                                                    MaxAvailableStrategy maxAvailableStrategy,
+                                                    AvailableRateStrategy availableRateStrategy) {
         Map<String, ParkingStrategy> strategyMap = new HashMap<>();
-        strategyMap.put(StrategyConstant.STANDARD_PARKING_BOY_STRATEGY, new SequentiallyStrategy());
-        strategyMap.put(StrategyConstant.SMART_PARKING_BOY_STRATEGY, new MaxAvailableStrategy());
-        strategyMap.put(StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY, new AvailableRateStrategy());
+        strategyMap.put(StrategyConstant.STANDARD_PARKING_BOY_STRATEGY, sequentiallyStrategy);
+        strategyMap.put(StrategyConstant.SMART_PARKING_BOY_STRATEGY, maxAvailableStrategy);
+        strategyMap.put(StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY, availableRateStrategy);
         return strategyMap;
     }
 

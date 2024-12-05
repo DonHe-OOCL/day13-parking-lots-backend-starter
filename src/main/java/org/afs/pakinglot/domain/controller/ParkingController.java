@@ -28,10 +28,10 @@ public class ParkingController {
         return parkingService.getParkingLots();
     }
 
-//    @PostMapping("/park/{strategy}")
-//    public Ticket park(@RequestBody Car car, @PathVariable String strategy) {
-//        return parkingService.park(car, strategy);
-//    }
+    @PostMapping("/park/{strategy}")
+    public Ticket park(@RequestBody Car car, @PathVariable String strategy) {
+        return parkingService.park(car, strategy);
+    }
 //
 //    @PostMapping("/fetch")
 //    public Car fetch(@RequestBody Ticket ticket) {
