@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
+@CrossOrigin
 public class ParkingController {
 
     private ParkingService parkingService;
