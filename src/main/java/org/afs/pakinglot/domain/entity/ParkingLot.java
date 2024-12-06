@@ -17,7 +17,7 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
-    public ParkingLot(int id, String name, int capacity) {
+    public ParkingLot(Integer id, String name, int capacity) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
