@@ -68,12 +68,12 @@ public class ParkingControllerTest {
         //then
         client.perform(MockMvcRequestBuilders.get("/parking"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("The Plaza Park"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].capacity").value(9))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("City Mall Garage"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].capacity").value(12))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Office Tower Parking"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].capacity").value(9));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(givenParkingLots.get(0).getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].capacity").value(givenParkingLots.get(0).getCapacity()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(givenParkingLots.get(1).getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].capacity").value(givenParkingLots.get(1).getCapacity()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value(givenParkingLots.get(2).getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].capacity").value(givenParkingLots.get(2).getCapacity()));
     }
 
     @Test
