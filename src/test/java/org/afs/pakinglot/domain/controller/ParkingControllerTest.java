@@ -1,6 +1,7 @@
 package org.afs.pakinglot.domain.controller;
 
 import org.afs.pakinglot.domain.common.StrategyConstant;
+import org.afs.pakinglot.domain.entity.Car;
 import org.afs.pakinglot.domain.entity.ParkingLot;
 import org.afs.pakinglot.domain.entity.Ticket;
 import org.afs.pakinglot.domain.entity.vo.ParkingLotVo;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static org.afs.pakinglot.domain.CarPlateGenerator.generatePlate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -266,5 +268,71 @@ public class ParkingControllerTest {
         // Then
         AssertionsForClassTypes.assertThat(save1.getPlateNumber()).isEqualTo(givenPlateNumber1);
         AssertionsForClassTypes.assertThat(save2.getPlateNumber()).isEqualTo(givenPlateNumber2);
+    }
+
+    @Test
+    void should_park_car_to_parking_lot_with_more_empty_positions_when_park_given_2_parking_lots_and_smart() throws Exception {
+        // Given
+        List<ParkingLot> givenParkingLots = parkingLotRepository.findAll();
+
+        String plate1 = generatePlate();
+        String plate2 = generatePlate();
+        String plate3 = generatePlate();
+        String plate4 = generatePlate();
+        String plate5 = generatePlate();
+
+        String givenCar1 = String.format("{\"plateNumber\": \"%s\"}", plate1);
+        String givenCar2 = String.format("{\"plateNumber\": \"%s\"}", plate2);
+        String givenCar3 = String.format("{\"plateNumber\": \"%s\"}", plate3);
+        String givenCar4 = String.format("{\"plateNumber\": \"%s\"}", plate4);
+        String givenCar5 = String.format("{\"plateNumber\": \"%s\"}", plate5);
+
+        // When
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar1))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo1 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket1 = ticketRepository.findById(ticketVo1.getId()).orElse(null);
+        assert ticket1 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar2))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo2 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket2 = ticketRepository.findById(ticketVo2.getId()).orElse(null);
+        assert ticket2 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar3))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo3 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket3 = ticketRepository.findById(ticketVo3.getId()).orElse(null);
+        assert ticket3 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar4))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo4 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket4 = ticketRepository.findById(ticketVo4.getId()).orElse(null);
+        assert ticket4 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar5))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo5 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket5 = ticketRepository.findById(ticketVo5.getId()).orElse(null);
+        assert ticket5 != null;
+
+        // Then
+        assertEquals(givenParkingLots.get(1).getId(), ticket1.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(1).getId(), ticket2.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(1).getId(), ticket3.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(0).getId(), ticket4.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(1).getId(), ticket5.getParkingLot().getId());
     }
 }
