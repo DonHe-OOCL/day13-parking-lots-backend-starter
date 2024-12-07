@@ -1,5 +1,6 @@
 package org.afs.pakinglot.domain.service;
 
+import org.afs.pakinglot.domain.common.StrategyConstant;
 import org.afs.pakinglot.domain.entity.Car;
 import org.afs.pakinglot.domain.entity.ParkingLot;
 import org.afs.pakinglot.domain.entity.Ticket;
@@ -50,7 +51,7 @@ public class ParkingService {
         if (ticketRepository.findByPlateNumber(car.getPlateNumber()) != null) {
             throw new UnrecognizedTicketException();
         }
-        ParkingStrategy parkingStrategy = strategyMap.getOrDefault(strategy, strategyMap.get("Sequentially"));
+        ParkingStrategy parkingStrategy = strategyMap.getOrDefault(strategy, strategyMap.get(StrategyConstant.STANDARD_PARKING_BOY_STRATEGY));
         List<ParkingLot> parkingLots = parkingLotRepository.findAll();
         ParkingLot parkingLot = parkingStrategy.findParkingLot(parkingLots);
         Integer slots = ticketRepository.countByParkingLotId(parkingLot.getId());
