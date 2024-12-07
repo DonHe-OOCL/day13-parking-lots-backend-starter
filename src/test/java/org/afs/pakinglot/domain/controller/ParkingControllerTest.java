@@ -178,8 +178,8 @@ public class ParkingControllerTest {
         // Then
         try {
             client.perform(MockMvcRequestBuilders.post("/parking/fetch")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(givenTicketDto))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(givenTicketDto))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(result -> {
                         String errorMessage = result.getResponse().getContentAsString();
@@ -201,19 +201,52 @@ public class ParkingControllerTest {
 
         // When
         client.perform(MockMvcRequestBuilders.post("/parking/fetch")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(givenTicketDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenTicketDto))
                 .andReturn().getResponse().getContentAsString();
 
         // Then
         try {
             client.perform(MockMvcRequestBuilders.post("/parking/fetch")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(givenTicketDto))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(givenTicketDto))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(result -> {
                         String errorMessage = result.getResponse().getContentAsString();
                         assertTrue(errorMessage.contains("Unrecognized parking ticket."));
+                    });
+        } catch (Exception ignore) {
+        }
+    }
+
+    @Test
+    void should_return_nothing_with_error_message_when_park_given_all_parking_lots_are_full() throws Exception {
+        // Given
+        String givenPlateNumber = generatePlate();
+        String givenTicketDto = String.format(
+                "{\"plateNumber\": \"%s\"}",
+                givenPlateNumber
+        );
+        for (int i = 0; i < parkingLotRepository.findAll().get(0).getCapacity(); i++) {
+            ticketRepository.save(new Ticket(generatePlate(), i, parkingLotRepository.findAll().get(0)));
+        }
+        for (int i = 0; i < parkingLotRepository.findAll().get(1).getCapacity(); i++) {
+            ticketRepository.save(new Ticket(generatePlate(), i, parkingLotRepository.findAll().get(1)));
+        }
+        for (int i = 0; i < parkingLotRepository.findAll().get(2).getCapacity(); i++) {
+            ticketRepository.save(new Ticket(generatePlate(), i, parkingLotRepository.findAll().get(2)));
+        }
+
+        // When
+        // Then
+        try {
+            client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.STANDARD_PARKING_BOY_STRATEGY)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(givenTicketDto))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(result -> {
+                        String errorMessage = result.getResponse().getContentAsString();
+                        assertTrue(errorMessage.contains("No available position."));
                     });
         } catch (Exception ignore) {
         }
