@@ -1,5 +1,6 @@
 package org.afs.pakinglot.domain.controller;
 
+import org.afs.pakinglot.domain.common.StrategyConstant;
 import org.afs.pakinglot.domain.entity.ParkingLot;
 import org.afs.pakinglot.domain.entity.Ticket;
 import org.afs.pakinglot.domain.entity.vo.ParkingLotVo;
@@ -106,5 +107,17 @@ public class ParkingControllerTest {
         assert findParkingLot != null;
         AssertionsForClassTypes.assertThat(findParkingLot.getName()).isEqualTo(givenName);
         AssertionsForClassTypes.assertThat(findParkingLot.getCapacity()).isEqualTo(givenCapacity);
+    }
+
+    @Test
+    void should_return_strategies_when_get_strategies() throws Exception {
+        //given
+        //when
+        //then
+        client.perform(MockMvcRequestBuilders.get("/parking/strategy"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0]").value(StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1]").value(StrategyConstant.STANDARD_PARKING_BOY_STRATEGY))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2]").value(StrategyConstant.SMART_PARKING_BOY_STRATEGY));
     }
 }
