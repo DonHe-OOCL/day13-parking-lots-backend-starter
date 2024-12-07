@@ -271,7 +271,7 @@ public class ParkingControllerTest {
     }
 
     @Test
-    void should_park_car_to_parking_lot_with_more_empty_positions_when_park_given_2_parking_lots_and_smart() throws Exception {
+    void should_park_car_to_parking_lot_with_more_empty_positions_when_park_given_3_parking_lots_and_smart() throws Exception {
         // Given
         List<ParkingLot> givenParkingLots = parkingLotRepository.findAll();
 
