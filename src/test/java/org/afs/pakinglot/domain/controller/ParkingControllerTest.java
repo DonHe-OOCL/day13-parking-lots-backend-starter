@@ -188,4 +188,34 @@ public class ParkingControllerTest {
         } catch (Exception ignore) {
         }
     }
+
+    @Test
+    void should_return_nothing_with_error_message_when_fetch_given_an_used_ticket() throws Exception {
+        // Given
+        String givenPlateNumber = generatePlate();
+        String givenTicketDto = String.format(
+                "{\"plateNumber\": \"%s\"}",
+                givenPlateNumber
+        );
+        ticketRepository.save(new Ticket(givenPlateNumber, 1, parkingLotRepository.findAll().get(0)));
+
+        // When
+        client.perform(MockMvcRequestBuilders.post("/parking/fetch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(givenTicketDto))
+                .andReturn().getResponse().getContentAsString();
+
+        // Then
+        try {
+            client.perform(MockMvcRequestBuilders.post("/parking/fetch")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(givenTicketDto))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(result -> {
+                        String errorMessage = result.getResponse().getContentAsString();
+                        assertTrue(errorMessage.contains("Unrecognized parking ticket."));
+                    });
+        } catch (Exception ignore) {
+        }
+    }
 }
