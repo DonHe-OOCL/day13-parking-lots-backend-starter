@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.json.ObjectContent;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static org.afs.pakinglot.domain.CarPlateGenerator.generatePlate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -119,5 +121,28 @@ public class ParkingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0]").value(StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1]").value(StrategyConstant.STANDARD_PARKING_BOY_STRATEGY))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2]").value(StrategyConstant.SMART_PARKING_BOY_STRATEGY));
+    }
+
+    @Test
+    void should_return_ticket_when_park_given_car_and_strategy() throws Exception {
+        // Given
+        String givenPlateNumber = generatePlate();
+        String givenStrategy = StrategyConstant.STANDARD_PARKING_BOY_STRATEGY;
+        String givenCar = String.format(
+                "{\"plateNumber\": \"%s\"}",
+                givenPlateNumber
+        );
+
+        // When
+        // Then
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + givenStrategy)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(givenCar)
+        ).andReturn().getResponse().getContentAsString();
+
+        TicketVo ticketVo = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket = ticketRepository.findById(ticketVo.getId()).orElse(null);
+        assert ticket != null;
+        AssertionsForClassTypes.assertThat(ticket.getPlateNumber()).isEqualTo(givenPlateNumber);
     }
 }
