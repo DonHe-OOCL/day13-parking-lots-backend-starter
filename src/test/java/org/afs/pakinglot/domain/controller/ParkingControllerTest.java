@@ -251,4 +251,20 @@ public class ParkingControllerTest {
         } catch (Exception ignore) {
         }
     }
+
+    @Test
+    void should_return_correct_car_when_fetch_twice_given_a_parking_lot_and_two_tickets() {
+        // Given
+        String givenPlateNumber1 = generatePlate();
+        String givenPlateNumber2 = generatePlate();
+        Ticket ticket1 = new Ticket(givenPlateNumber1, 1, parkingLotRepository.findAll().get(0));
+        Ticket ticket2 = new Ticket(givenPlateNumber2, 2, parkingLotRepository.findAll().get(0));
+
+        // When
+        Ticket save1 = ticketRepository.save(ticket1);
+        Ticket save2 = ticketRepository.save(ticket2);
+        // Then
+        AssertionsForClassTypes.assertThat(save1.getPlateNumber()).isEqualTo(givenPlateNumber1);
+        AssertionsForClassTypes.assertThat(save2.getPlateNumber()).isEqualTo(givenPlateNumber2);
+    }
 }
