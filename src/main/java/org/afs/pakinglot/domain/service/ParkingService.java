@@ -33,9 +33,11 @@ public class ParkingService {
         this.strategyMap = strategyMap;
         this.parkingLotRepository = parkingLotRepository;
         this.ticketRepository = ticketRepository;
-        parkingLotRepository.save(new ParkingLot(null, "The Plaza Park", 9));
-        parkingLotRepository.save(new ParkingLot(null, "City Mall Garage", 12));
-        parkingLotRepository.save(new ParkingLot(null, "Office Tower Parking", 9));
+        if (ticketRepository.findAll().isEmpty()) {
+            parkingLotRepository.save(new ParkingLot(null, "The Plaza Park", 9));
+            parkingLotRepository.save(new ParkingLot(null, "City Mall Garage", 12));
+            parkingLotRepository.save(new ParkingLot(null, "Office Tower Parking", 9));
+        }
     }
 
     public List<String> getParkingStrategy() {
