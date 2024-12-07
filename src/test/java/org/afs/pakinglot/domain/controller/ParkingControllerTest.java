@@ -6,6 +6,7 @@ import org.afs.pakinglot.domain.entity.vo.ParkingLotVo;
 import org.afs.pakinglot.domain.entity.vo.TicketVo;
 import org.afs.pakinglot.domain.repository.ParkingLotRepository;
 import org.afs.pakinglot.domain.repository.TicketRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -79,5 +81,30 @@ public class ParkingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].capacity").value(12))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Office Tower Parking"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].capacity").value(9));
+    }
+
+    @Test
+    void should_add_parking_lot_when_add_given_parking_lot() throws Exception {
+        // Given
+        String givenName = "The Park";
+        Integer givenCapacity = 90;
+        String givenParkingLot = String.format(
+                "{\"name\": \"%s\", \"capacity\": \"%d\"}",
+                givenName,
+                givenCapacity
+        );
+
+        // When
+        // Then
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(givenParkingLot)
+        ).andReturn().getResponse().getContentAsString();
+        ParkingLot parkingLot = parkingLotJacksonTester.parseObject(contentAsString);
+
+        ParkingLot findParkingLot = parkingLotRepository.findById(parkingLot.getId()).orElse(null);
+        assert findParkingLot != null;
+        AssertionsForClassTypes.assertThat(findParkingLot.getName()).isEqualTo(givenName);
+        AssertionsForClassTypes.assertThat(findParkingLot.getCapacity()).isEqualTo(givenCapacity);
     }
 }
