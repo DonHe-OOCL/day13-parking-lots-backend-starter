@@ -33,6 +33,7 @@ public class ParkingService {
         this.strategyMap = strategyMap;
         this.parkingLotRepository = parkingLotRepository;
         this.ticketRepository = ticketRepository;
+        // 前端没有提供add接口，只能在初始化时添加
         if (ticketRepository.findAll().isEmpty()) {
             parkingLotRepository.save(new ParkingLot(null, "The Plaza Park", 9));
             parkingLotRepository.save(new ParkingLot(null, "City Mall Garage", 12));
