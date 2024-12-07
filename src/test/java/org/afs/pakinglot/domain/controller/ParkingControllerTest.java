@@ -41,22 +41,10 @@ public class ParkingControllerTest {
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
-    private JacksonTester<ParkingLotVo> parkingLotVoJacksonTester;
-
-    @Autowired
     private JacksonTester<TicketVo> ticketVoJacksonTester;
 
     @Autowired
-    private JacksonTester<List<ParkingLotVo>> parkingLotVoListJacksonTester;
-
-    @Autowired
-    private JacksonTester<List<TicketVo>> ticketVoListJacksonTester;
-
-    @Autowired
     private JacksonTester<ParkingLot> parkingLotJacksonTester;
-
-    @Autowired
-    private JacksonTester<Ticket> ticketJacksonTester;
 
     @BeforeEach
     void setUp() {
@@ -64,6 +52,7 @@ public class ParkingControllerTest {
     }
 
     private void givenDataParkingLotJpaRepository() {
+        ticketRepository.deleteAll();
         parkingLotRepository.deleteAll();
         parkingLotRepository.save(new ParkingLot(null, "The Plaza Park", 9));
         parkingLotRepository.save(new ParkingLot(null, "City Mall Garage", 12));
@@ -288,7 +277,7 @@ public class ParkingControllerTest {
         String givenCar5 = String.format("{\"plateNumber\": \"%s\"}", plate5);
 
         // When
-        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SMART_PARKING_BOY_STRATEGY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenCar1))
                 .andReturn().getResponse().getContentAsString();
@@ -296,7 +285,7 @@ public class ParkingControllerTest {
         Ticket ticket1 = ticketRepository.findById(ticketVo1.getId()).orElse(null);
         assert ticket1 != null;
 
-        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SMART_PARKING_BOY_STRATEGY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenCar2))
                 .andReturn().getResponse().getContentAsString();
@@ -304,7 +293,7 @@ public class ParkingControllerTest {
         Ticket ticket2 = ticketRepository.findById(ticketVo2.getId()).orElse(null);
         assert ticket2 != null;
 
-        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SMART_PARKING_BOY_STRATEGY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenCar3))
                 .andReturn().getResponse().getContentAsString();
@@ -312,7 +301,7 @@ public class ParkingControllerTest {
         Ticket ticket3 = ticketRepository.findById(ticketVo3.getId()).orElse(null);
         assert ticket3 != null;
 
-        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SMART_PARKING_BOY_STRATEGY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenCar4))
                 .andReturn().getResponse().getContentAsString();
@@ -320,7 +309,7 @@ public class ParkingControllerTest {
         Ticket ticket4 = ticketRepository.findById(ticketVo4.getId()).orElse(null);
         assert ticket4 != null;
 
-        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/Smart")
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SMART_PARKING_BOY_STRATEGY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenCar5))
                 .andReturn().getResponse().getContentAsString();
@@ -334,5 +323,60 @@ public class ParkingControllerTest {
         assertEquals(givenParkingLots.get(1).getId(), ticket3.getParkingLot().getId());
         assertEquals(givenParkingLots.get(0).getId(), ticket4.getParkingLot().getId());
         assertEquals(givenParkingLots.get(1).getId(), ticket5.getParkingLot().getId());
+    }
+
+    @Test
+    void should_park_into_the_the_parking_lot_which_have_big_available_capacity_rate_given_3_parking_lots_and_super() throws Exception {
+        // Given
+        List<ParkingLot> givenParkingLots = parkingLotRepository.findAll();
+
+        String plate1 = generatePlate();
+        String plate2 = generatePlate();
+        String plate3 = generatePlate();
+        String plate4 = generatePlate();
+
+        String givenCar1 = String.format("{\"plateNumber\": \"%s\"}", plate1);
+        String givenCar2 = String.format("{\"plateNumber\": \"%s\"}", plate2);
+        String givenCar3 = String.format("{\"plateNumber\": \"%s\"}", plate3);
+        String givenCar4 = String.format("{\"plateNumber\": \"%s\"}", plate4);
+
+        // When
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar1))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo1 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket1 = ticketRepository.findById(ticketVo1.getId()).orElse(null);
+        assert ticket1 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar2))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo2 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket2 = ticketRepository.findById(ticketVo2.getId()).orElse(null);
+        assert ticket2 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar3))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo3 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket3 = ticketRepository.findById(ticketVo3.getId()).orElse(null);
+        assert ticket3 != null;
+
+        contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/park/" + StrategyConstant.SUPER_SMART_PARKING_BOY_STRATEGY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenCar4))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo4 = ticketVoJacksonTester.parseObject(contentAsString);
+        Ticket ticket4 = ticketRepository.findById(ticketVo4.getId()).orElse(null);
+        assert ticket4 != null;
+
+        // Then
+        assertEquals(givenParkingLots.get(0).getId(), ticket1.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(1).getId(), ticket2.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(2).getId(), ticket3.getParkingLot().getId());
+        assertEquals(givenParkingLots.get(1).getId(), ticket4.getParkingLot().getId());
     }
 }
