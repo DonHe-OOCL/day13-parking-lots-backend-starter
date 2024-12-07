@@ -15,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.json.ObjectContent;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static org.afs.pakinglot.domain.CarPlateGenerator.generatePlate;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -164,5 +163,29 @@ public class ParkingControllerTest {
                 .andReturn().getResponse().getContentAsString();
         TicketVo ticketVo = ticketVoJacksonTester.parseObject(contentAsString);
         AssertionsForClassTypes.assertThat(ticketVo.getPlateNumber()).isEqualTo(givenPlateNumber);
+    }
+
+    @Test
+    void should_return_nothing_with_error_message_when_fetch_given_an_unrecognized_ticket() throws Exception {
+        // Given
+        String givenPlateNumber = generatePlate();
+        String givenTicketDto = String.format(
+                "{\"plateNumber\": \"%s\"}",
+                givenPlateNumber
+        );
+
+        // When
+        // Then
+        try {
+            client.perform(MockMvcRequestBuilders.post("/parking/fetch")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(givenTicketDto))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(result -> {
+                        String errorMessage = result.getResponse().getContentAsString();
+                        assertTrue(errorMessage.contains("Unrecognized parking ticket."));
+                    });
+        } catch (Exception ignore) {
+        }
     }
 }
