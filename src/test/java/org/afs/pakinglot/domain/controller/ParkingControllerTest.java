@@ -1,10 +1,8 @@
 package org.afs.pakinglot.domain.controller;
 
 import org.afs.pakinglot.domain.common.StrategyConstant;
-import org.afs.pakinglot.domain.entity.Car;
 import org.afs.pakinglot.domain.entity.ParkingLot;
 import org.afs.pakinglot.domain.entity.Ticket;
-import org.afs.pakinglot.domain.entity.vo.ParkingLotVo;
 import org.afs.pakinglot.domain.entity.vo.TicketVo;
 import org.afs.pakinglot.domain.repository.ParkingLotRepository;
 import org.afs.pakinglot.domain.repository.TicketRepository;
