@@ -145,4 +145,24 @@ public class ParkingControllerTest {
         assert ticket != null;
         AssertionsForClassTypes.assertThat(ticket.getPlateNumber()).isEqualTo(givenPlateNumber);
     }
+
+    @Test
+    void should_return_car_when_fetch_given_ticket() throws Exception {
+        // Given
+        String givenPlateNumber = generatePlate();
+        String givenTicketDto = String.format(
+                "{\"plateNumber\": \"%s\"}",
+                givenPlateNumber
+        );
+        ticketRepository.save(new Ticket(givenPlateNumber, 1, parkingLotRepository.findAll().get(0)));
+
+        // When
+        // Then
+        String contentAsString = client.perform(MockMvcRequestBuilders.post("/parking/fetch")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenTicketDto))
+                .andReturn().getResponse().getContentAsString();
+        TicketVo ticketVo = ticketVoJacksonTester.parseObject(contentAsString);
+        AssertionsForClassTypes.assertThat(ticketVo.getPlateNumber()).isEqualTo(givenPlateNumber);
+    }
 }
